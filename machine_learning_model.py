@@ -17,11 +17,8 @@ class shell_detect :
 
     @staticmethod
     def code_word_to_vector(php_code) :
-        filter_flag_list = ['(',')','{','}','\'','"',',',';','=','.','\t','\n','\r\n']
-        keyword = [
-                    '$_GET','$_POST','$_REQUEST','$_COOKIE',
-                    '$_GET[','$_POST[','$_REQUEST[','$_COOKIE['
-                  ]
+        filter_flag_list = ['@','[',']','(',')','{','}','\'','"',',',';','=','.','\t','\n','\r\n']
+        keyword = ['$_GET','$_POST','$_REQUEST','$_COOKIE']
 
         for filter_flag_index in filter_flag_list :
             php_code = php_code.replace(filter_flag_index,' ')
@@ -31,6 +28,8 @@ class shell_detect :
         for index in range(len(vector)) :  #  filter $ variant
             if vector[index].startswith('$') and not vector[index] in keyword :
                 vector[index] = ''
+            elif vector[index] in keyword :
+                vector[index] = '$'
 
         while vector.count('') :  #  filter empty item ..
             vector.remove('')
@@ -112,6 +111,7 @@ if __name__ == '__main__' :
         print 'Shell Type :' , model.try_classify(shell_detect.read_file(sys.argv[1]))
     else :
         print 'Test Sample ..'
+        ''''''
         print 'Shell Type :' , model.try_classify('<?php eval($_GET["exp"]); ?>')
         print 'Shell Type :' , model.try_classify('<?php assert($_GET["exp"]); ?>')
         print 'Shell Type :' , model.try_classify('<?php system($_GET["exp"]); ?>')
@@ -120,3 +120,5 @@ if __name__ == '__main__' :
         print 'Shell Type :' , model.try_classify('<?php $b=1+1; ?>')
         print 'Shell Type :' , model.try_classify('<?php phpinfo(); ?>')
         print 'Shell Type :' , model.try_classify('<?php $a=create_function(\'\',\'ev\',\'al\'.\'($\'.\'_GET["e"]);\'); $a(); ?>')
+        print 'Shell Type :' , model.try_classify('<?php include($_COOKIE[\'s\']); ?>')
+        print 'Shell Type :' , model.try_classify('<?php require_once($_POST[\'s\']); ?>')
