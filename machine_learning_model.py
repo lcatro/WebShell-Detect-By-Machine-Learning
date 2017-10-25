@@ -1,6 +1,7 @@
 
 import math
 import os
+import sys
 
 
 class shell_detect :
@@ -107,11 +108,15 @@ class shell_detect :
 if __name__ == '__main__' :
     model = shell_detect()
     
-    print 'Shell Type :' , model.try_classify('<?php eval($_GET["exp"]); ?>')
-    print 'Shell Type :' , model.try_classify('<?php assert($_GET["exp"]); ?>')
-    print 'Shell Type :' , model.try_classify('<?php system($_GET["exp"]); ?>')
-    print 'Shell Type :' , model.try_classify('<?php systen("ifconfig"); ?>')
-    print 'Shell Type :' , model.try_classify('<?php echo "123"; ?>')
-    print 'Shell Type :' , model.try_classify('<?php $b=1+1; ?>')
-    print 'Shell Type :' , model.try_classify('<?php phpinfo(); ?>')
-    print 'Shell Type :' , model.try_classify('<?php $a=create_function(\'\',\'ev\',\'al\'.\'($\'.\'_GET["e"]);\'); $a(); ?>')
+    if 2 == len(sys.argv) :
+        print 'Shell Type :' , model.try_classify(shell_detect.read_file(sys.argv[1]))
+    else :
+        print 'Test Sample ..'
+        print 'Shell Type :' , model.try_classify('<?php eval($_GET["exp"]); ?>')
+        print 'Shell Type :' , model.try_classify('<?php assert($_GET["exp"]); ?>')
+        print 'Shell Type :' , model.try_classify('<?php system($_GET["exp"]); ?>')
+        print 'Shell Type :' , model.try_classify('<?php systen("ifconfig"); ?>')
+        print 'Shell Type :' , model.try_classify('<?php echo "123"; ?>')
+        print 'Shell Type :' , model.try_classify('<?php $b=1+1; ?>')
+        print 'Shell Type :' , model.try_classify('<?php phpinfo(); ?>')
+        print 'Shell Type :' , model.try_classify('<?php $a=create_function(\'\',\'ev\',\'al\'.\'($\'.\'_GET["e"]);\'); $a(); ?>')
