@@ -1,6 +1,0 @@
-
-<?php
-
-    system('hello world');
-
-?>
